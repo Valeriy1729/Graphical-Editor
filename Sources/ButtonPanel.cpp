@@ -1,0 +1,18 @@
+#include "ButtonPanel.h"
+
+ButtonPanel::ButtonPanel(QWidget* parent) : QWidget(parent)
+{
+	g_layout = new QGridLayout(this);
+	eraseBtn = new PushButton(this, 0xeeeeee, "Erase");
+
+	for(int i {0}; i < BUTTON_COUNT; ++i) {
+		PushButton* btn {new PushButton(this, Colors[i])};
+		g_layout->addWidget(btn, i / COLUMN_COUNT, i % COLUMN_COUNT, 1, 1);
+		ColButtons.push_back(btn);
+	}
+
+	g_layout->addWidget(eraseBtn, BUTTON_COUNT / COLUMN_COUNT, 0, 1, 2);
+}
+
+ButtonPanel::~ButtonPanel()
+{ }

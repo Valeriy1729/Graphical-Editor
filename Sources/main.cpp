@@ -1,7 +1,16 @@
 #include <iostream>
+#include <QApplication>
+#include "MainWindow.h"
 
-int main()
+int main(int argc, char** argv)
 {
-	std::cout << "executed correctly" << std::endl;
+	QApplication app(argc, argv);
+	MainWindow MW;
+
+	MW.setStyleSheet("QLabel { background-color: #dddddd; }");
+	
+	MW.show();
+
+	app.exec();
 	return 0;	
 }
