@@ -13,12 +13,15 @@
 using std::deque;
 class CanvasCommand;
 
+enum class Reciever_Consts { MAX_HIST_LEN = 11 };
+
 
 class Reciever {
 public:
 	Reciever();
 	virtual void execute() = 0;
 	virtual void undo() = 0;	
+	virtual void redo() = 0;
 	virtual ~Reciever();
 };
 
@@ -29,6 +32,7 @@ protected:
 	static QPainterPath path;	
 	QWidget* parent;
 	QMouseEvent* m_event;
+	int currHistIndex;
 public:
 	CanvasReciever();
 	void setFields(QWidget* parent, QMouseEvent* _m_event);
@@ -41,6 +45,7 @@ public:
 	DrawReciever();
 	virtual void execute() override;
 	virtual void undo() override;	
+	virtual void redo() override;
 	virtual ~DrawReciever();
 };
 
@@ -50,6 +55,7 @@ public:
 	StartDrawReciever();
 	virtual void execute() override;
 	virtual void undo() override;	
+	virtual void redo() override;
 	virtual ~StartDrawReciever();
 };
 
@@ -59,6 +65,7 @@ public:
 	EndDrawReciever();
 	virtual void execute() override;
 	virtual void undo() override;	
+	virtual void redo() override;
 	virtual ~EndDrawReciever();
 };
 
@@ -68,6 +75,7 @@ public:
 	UpdateReciever();
 	virtual void execute() override;
 	virtual void undo() override;	
+	virtual void redo() override;
 	virtual ~UpdateReciever();
 };
 

@@ -22,6 +22,10 @@ void ComplexCommand::undo()
 {
 	reciever->undo();		
 }
+void ComplexCommand::redo()
+{
+	reciever->redo();	
+}
 
 
 CanvasCommand::CanvasCommand(CanvasReciever* _canvasReciever, QWidget* _parent, QMouseEvent* _m_event) :
@@ -31,14 +35,16 @@ CanvasCommand::~CanvasCommand()
 { }
 void CanvasCommand::execute()
 {
-	canvasReciever->setFields(nullptr, nullptr);
-
 	canvasReciever->setFields(parent, m_event);
 	canvasReciever->execute();
 }
 void CanvasCommand::undo()
 {
 	canvasReciever->undo();	
+}
+void CanvasCommand::redo()
+{
+	canvasReciever->redo();	
 }
 
 

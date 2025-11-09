@@ -1,31 +1,56 @@
 #include "Command/Invoker.h"
 
-Invoker::Invoker() : History({})
+Invoker::Invoker() : History({}), currHistIndex(-1)
 { }
+
+void Invoker::clearHistFuture()
+{
+	Command* back_command;
+	size_t histSize {History.size()};
+	for(int i {++currHistIndex}; i < static_cast<int>(histSize); ++i) {
+		back_command = History.back();
+		History.pop_back();
+		delete back_command;
+	}
+}
 
 void Invoker::execute(CanvasCommand* command)
 {
+	int histSize {static_cast<int>(History.size())};
+	int MAX_HIST_LEN {static_cast<int>(Invoker_Consts::MAX_HIST_LEN)};
+
 	command->execute();
+
 	if(command->getHistoryFlag() == true) {
-		std::cout << "added in history" << std::endl;
+		clearHistFuture();
 		History.push_back(command);
+		if(histSize > MAX_HIST_LEN) {
+			History.pop_front();
+			--currHistIndex;
+		}
 	} else
 		delete command;
 }
 
 void Invoker::undo()
 {
-	if(History.size() == 0) return;
-	std::cout << "removed from history" << std::endl;
-	Command* last_command {History.back()};
+	if(currHistIndex == -1) return;
+	if(currHistIndex == 0) {
+		History[0]->undo();
+		--currHistIndex;
+		return;	
+	}
+	Command* last_command {History[--currHistIndex]};
 	last_command->undo();
-	History.pop_back();
-	delete last_command;
 }
 
 void Invoker::redo()
 {
-	return;
+	if(currHistIndex >= static_cast<int>(History.size()) - 1) return;
+	++currHistIndex;
+	Command* redo_command {History[currHistIndex++]};
+	--currHistIndex;
+	redo_command->redo();
 }
 
 Invoker::~Invoker()

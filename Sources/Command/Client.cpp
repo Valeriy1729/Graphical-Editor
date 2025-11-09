@@ -6,7 +6,6 @@ Client::Client()
 	StartDrawR = new StartDrawReciever();	
 	EndDrawR = new EndDrawReciever();	
 	UpdateR = new UpdateReciever();	
-	UpdateR->setFields(nullptr, nullptr);//???
 }
 
 CanvasCommand* Client::getCanvasCommand(CommandType ReqType, QWidget* parent, QMouseEvent* event)

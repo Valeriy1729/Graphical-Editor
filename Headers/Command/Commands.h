@@ -16,6 +16,7 @@ public:
 	bool getHistoryFlag();
 	virtual void execute() = 0;
 	virtual void undo() = 0;
+	virtual void redo() = 0;
 	virtual ~Command();
 };
 
@@ -27,6 +28,7 @@ public:
 	ComplexCommand();
 	virtual void execute() override;
 	virtual void undo() override;
+	virtual void redo() override;
 	virtual ~ComplexCommand();
 };
 
@@ -41,6 +43,7 @@ public:
 	      		QWidget* _parent, QMouseEvent* _m_event=nullptr);
 	virtual void execute() override;
 	virtual void undo() override;
+	virtual void redo() override;
 	virtual ~CanvasCommand();
 };
 

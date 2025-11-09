@@ -19,6 +19,8 @@ void Canvas::mousePressEvent(QMouseEvent* event)
 		invoker->execute(client->getCanvasCommand(CommandType::STARTDRAW, this, event));
 	else if(event->button() == Qt::RightButton)
 		invoker->undo();
+	else if(event->button() == Qt::MiddleButton)
+		invoker->redo();
 }
 
 void Canvas::mouseMoveEvent(QMouseEvent* event)
