@@ -2,23 +2,34 @@
 
 Client::Client()
 { 
-	StartDrawR = new StartDrawReciever;	
-	DrawR = new DrawReciever;	
-	EndDrawR = new EndDrawReciever;	
+	DrawR = new DrawReciever();	
+	StartDrawR = new StartDrawReciever();	
+	EndDrawR = new EndDrawReciever();	
+	UpdateR = new UpdateReciever();	
+	UpdateR->setFields(nullptr, nullptr);//???
 }
 
-ComplexCommand* Client::getCommand(CommandType ReqType)
+CanvasCommand* Client::getCanvasCommand(CommandType ReqType, QWidget* parent, QMouseEvent* event)
 {
 	switch(ReqType) {
-		case CommandType::STARTDRAW: return new StartDrawCommand(StartDrawR);
-		case CommandType::DRAW: return new DrawCommand(DrawR);
-		case CommandType::ENDDRAW: return new EndDrawCommand(EndDrawR);
+		case CommandType::DRAW: return new DrawCommand(DrawR, parent, event);
+		case CommandType::STARTDRAW: return new StartDrawCommand(StartDrawR, parent, event);
+		case CommandType::ENDDRAW: return new EndDrawCommand(EndDrawR, parent, event);
+		case CommandType::UPDATE: break;
 	};
+	throw std::exception();
+}
+
+CanvasCommand* Client::getCanvasCommand(CommandType ReqType, QWidget* parent)
+{
+	if(ReqType != CommandType::UPDATE) throw std::exception();
+	return new UpdateCommand(UpdateR, parent);
 }
 
 Client::~Client()
 {
-	delete StartDrawR;
 	delete DrawR;
+	delete StartDrawR;
 	delete EndDrawR;
+	delete UpdateR;
 }

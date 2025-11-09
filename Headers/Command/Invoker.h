@@ -14,8 +14,9 @@ class Invoker {
 public:
 	Invoker();
 	~Invoker();
-	void execute(Command* command);
+	void execute(CanvasCommand* command);
 	void undo();
+	void redo();
 };
 
 

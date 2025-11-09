@@ -2,6 +2,10 @@
 
 Command::Command()
 { }
+bool Command::getHistoryFlag()
+{
+	return putInHist;	
+}
 Command::~Command()
 { }
 
@@ -20,25 +24,55 @@ void ComplexCommand::undo()
 }
 
 
-StartDrawCommand::StartDrawCommand(Reciever* _reciever)
+CanvasCommand::CanvasCommand(CanvasReciever* _canvasReciever, QWidget* _parent, QMouseEvent* _m_event) :
+	canvasReciever(_canvasReciever), parent(_parent), m_event(_m_event)
+{ }
+CanvasCommand::~CanvasCommand()
+{ }
+void CanvasCommand::execute()
 {
-	Type = CommandType::STARTDRAW; reciever = _reciever; putInHist = false;
+	canvasReciever->setFields(nullptr, nullptr);
+
+	canvasReciever->setFields(parent, m_event);
+	canvasReciever->execute();
+}
+void CanvasCommand::undo()
+{
+	canvasReciever->undo();	
+}
+
+
+StartDrawCommand::StartDrawCommand(CanvasReciever* _canvasReciever, QWidget* _parent, QMouseEvent* _m_event) : 
+	CanvasCommand(_canvasReciever, _parent, _m_event)
+{
+	Type = CommandType::STARTDRAW; putInHist = false;
 }
 StartDrawCommand::~StartDrawCommand()
 { }
 
 
-DrawCommand::DrawCommand(Reciever* _reciever)
+DrawCommand::DrawCommand(CanvasReciever* _canvasReciever, QWidget* _parent, QMouseEvent* _m_event) :
+	CanvasCommand(_canvasReciever, _parent, _m_event)
 {
-	Type = CommandType::DRAW; reciever = _reciever; putInHist = false;
+	Type = CommandType::DRAW; putInHist = false;
 }
 DrawCommand::~DrawCommand()
 { }
 
 
-EndDrawCommand::EndDrawCommand(Reciever* _reciever)
+EndDrawCommand::EndDrawCommand(CanvasReciever* _canvasReciever, QWidget* _parent, QMouseEvent* _m_event) :
+	CanvasCommand(_canvasReciever, _parent, _m_event)
 {
-	Type = CommandType::ENDDRAW; reciever = _reciever; putInHist = true;
+	Type = CommandType::ENDDRAW; putInHist = true;
 }
 EndDrawCommand::~EndDrawCommand()
+{ }
+
+
+UpdateCommand::UpdateCommand(CanvasReciever* _canvasReciever, QWidget* _parent) :
+	CanvasCommand(_canvasReciever, _parent)
+{
+	Type = CommandType::UPDATE; putInHist = false;
+}
+UpdateCommand::~UpdateCommand()
 { }

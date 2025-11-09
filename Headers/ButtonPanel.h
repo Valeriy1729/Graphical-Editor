@@ -8,6 +8,7 @@
 
 using std::vector;
 
+
 class ButtonPanel : public QWidget {
 	Q_OBJECT
 

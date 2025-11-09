@@ -2,10 +2,16 @@
 
 MainWindow::MainWindow(QWidget* parent) : QWidget(parent)
 {
+	client = new Client;
+	invoker = new Invoker;
+
 	g_layout = new QGridLayout(this);
 	title = new QLabel("", this);
 	buttonPanel = new ButtonPanel(this);
 	canvas = new Canvas(this);
+
+	canvas->setInvoker(invoker);
+	canvas->setClient(client);
 
 	g_layout->addWidget(title, 0, 0, 1, 10);
 	g_layout->addWidget(canvas, 1, 0, 9, 9);
@@ -17,4 +23,7 @@ MainWindow::MainWindow(QWidget* parent) : QWidget(parent)
 }
 
 MainWindow::~MainWindow()
-{ }
+{
+	delete client;
+	delete invoker;
+}

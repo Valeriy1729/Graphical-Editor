@@ -1,16 +1,21 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
+#include <exception>
+#include <QWidget>
 #include "Command/Commands.h"
 #include "Command/DrawReciever.h"
 
+
 class Client {
-	StartDrawReciever* StartDrawR;
 	DrawReciever* DrawR;
+	StartDrawReciever* StartDrawR;
 	EndDrawReciever* EndDrawR;
+	UpdateReciever* UpdateR;
 public:
 	Client();
-	ComplexCommand* getCommand(CommandType ReqType);
+	CanvasCommand* getCanvasCommand(CommandType ReqType, QWidget* parent, QMouseEvent* event);
+	CanvasCommand* getCanvasCommand(CommandType ReqType, QWidget* parent);
 	~Client();
 };
 
