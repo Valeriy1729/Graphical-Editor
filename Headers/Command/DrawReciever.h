@@ -2,6 +2,7 @@
 #define DRAWRECIEVER_H
 
 #include <QWidget>
+#include <QColor>
 #include <QPainterPath>
 #include <QMouseEvent>
 #include <QPaintEvent>
@@ -13,7 +14,7 @@
 using std::deque;
 class CanvasCommand;
 
-enum class Reciever_Consts { MAX_HIST_LEN = 11 };
+enum class Reciever_Consts { MAX_HIST_LEN = 17 };
 
 
 class Reciever {
@@ -32,10 +33,13 @@ protected:
 	static QPainterPath path;	
 	QWidget* parent;
 	QMouseEvent* m_event;
+	QColor penColor;
+	int penSize;
 	int currHistIndex;
 public:
 	CanvasReciever();
-	void setFields(QWidget* parent, QMouseEvent* _m_event);
+	void setFields(QWidget* parent, QMouseEvent* _m_event,
+			QColor _penColor, int _penSize);
 	virtual ~CanvasReciever();
 };
 

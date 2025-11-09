@@ -7,7 +7,7 @@
 
 using std::deque;
 
-enum class Invoker_Consts { MAX_HIST_LEN = 10 };
+enum class Invoker_Consts { MAX_HIST_LEN = 16 };
 
 class Invoker {
 	deque<Command*> History;
@@ -15,7 +15,7 @@ class Invoker {
 public:
 	Invoker();
 	void clearHistFuture();
-	void execute(CanvasCommand* command);
+	void execute(Command* command);
 	void undo();
 	void redo();
 	~Invoker();

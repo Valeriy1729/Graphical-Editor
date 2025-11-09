@@ -6,15 +6,15 @@ Invoker::Invoker() : History({}), currHistIndex(-1)
 void Invoker::clearHistFuture()
 {
 	Command* back_command;
-	size_t histSize {History.size()};
-	for(int i {++currHistIndex}; i < static_cast<int>(histSize); ++i) {
+	int histSize {static_cast<int>(History.size())};
+	for(int i {++currHistIndex}; i < histSize; ++i) {
 		back_command = History.back();
 		History.pop_back();
 		delete back_command;
 	}
 }
 
-void Invoker::execute(CanvasCommand* command)
+void Invoker::execute(Command* command)
 {
 	int histSize {static_cast<int>(History.size())};
 	int MAX_HIST_LEN {static_cast<int>(Invoker_Consts::MAX_HIST_LEN)};
@@ -46,7 +46,8 @@ void Invoker::undo()
 
 void Invoker::redo()
 {
-	if(currHistIndex >= static_cast<int>(History.size()) - 1) return;
+	int histSize {static_cast<int>(History.size())};
+	if(currHistIndex >= histSize - 1) return;
 	++currHistIndex;
 	Command* redo_command {History[currHistIndex++]};
 	--currHistIndex;

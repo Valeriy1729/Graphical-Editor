@@ -9,10 +9,12 @@ CanvasReciever::CanvasReciever() : parent(nullptr), m_event(nullptr), currHistIn
 { }
 CanvasReciever::~CanvasReciever()
 { }
-void CanvasReciever::setFields(QWidget* _parent, QMouseEvent* _m_event)
+void CanvasReciever::setFields(QWidget* _parent, QMouseEvent* _m_event, QColor _penColor, int _penSize)
 {
 	parent = _parent;
 	m_event = _m_event;
+	penColor = _penColor;
+	penSize = _penSize;
 }
 deque<QPainterPath> CanvasReciever::pathHist {};
 QPainterPath CanvasReciever::path {QPainterPath()};
@@ -80,7 +82,8 @@ void EndDrawReciever::undo()
 }
 void EndDrawReciever::redo()
 {
-	if(currHistIndex >= static_cast<int>(pathHist.size()) - 1) return;
+	int histSize {static_cast<int>(pathHist.size())};
+	if(currHistIndex >= histSize - 1) return;
 	++currHistIndex;
 	path = pathHist[currHistIndex++];
 	--currHistIndex;
@@ -95,7 +98,7 @@ UpdateReciever::UpdateReciever() : CanvasReciever()
 void UpdateReciever::execute()
 {
 	QPainter painter(parent);
-	QPen pen(Qt::red, 50);
+	QPen pen(penColor, penSize);
 	painter.setPen(pen);
 	painter.drawPath(path);
 	painter.end();

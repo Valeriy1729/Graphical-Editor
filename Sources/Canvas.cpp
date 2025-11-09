@@ -1,7 +1,10 @@
 #include "Canvas.h"
 
 Canvas::Canvas(QWidget* parent) : QWidget(parent)
-{ }
+{
+	penColor = Qt::black;
+	penSize = 15;
+}
 
 void Canvas::setInvoker(Invoker* _invoker)
 {
@@ -11,6 +14,16 @@ void Canvas::setInvoker(Invoker* _invoker)
 void Canvas::setClient(Client* _client)
 {
 	client = _client;
+}
+
+void Canvas::setPenColor(QColor _penColor)
+{
+	penColor = _penColor;	
+}
+
+void Canvas::setPenSize(int _penSize)
+{
+	penSize = _penSize;
 }
 
 void Canvas::mousePressEvent(QMouseEvent* event)
@@ -37,7 +50,8 @@ void Canvas::mouseReleaseEvent(QMouseEvent* event)
 
 void Canvas::paintEvent(QPaintEvent* event)
 {
-	invoker->execute(client->getCanvasCommand(CommandType::UPDATE, this));
+	Q_UNUSED(event);
+	invoker->execute(client->getCanvasCommand(CommandType::UPDATE, this, penColor, penSize));
 }
 
 Canvas::~Canvas()

@@ -22,6 +22,26 @@ MainWindow::MainWindow(QWidget* parent) : QWidget(parent)
 	title->setFixedHeight(20);
 }
 
+void MainWindow::undo()
+{
+	invoker->undo();	
+}
+
+void MainWindow::redo()
+{
+	invoker->redo();	
+}
+
+const ButtonPanel* MainWindow::getButtonPanel()
+{
+	return const_cast<const ButtonPanel*>(buttonPanel);
+}
+
+const Canvas* MainWindow::getCanvas()
+{
+	return const_cast<const Canvas*>(canvas);
+}
+
 MainWindow::~MainWindow()
 {
 	delete client;

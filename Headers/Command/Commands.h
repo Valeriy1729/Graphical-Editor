@@ -2,6 +2,7 @@
 #define COMMANDS_H
 
 #include <QWidget>
+#include <QColor>
 #include "DrawReciever.h"
 
 enum class CommandType { STARTDRAW, DRAW, ENDDRAW, UPDATE };
@@ -38,9 +39,13 @@ protected:
 	CanvasReciever* canvasReciever;
 	QWidget* parent;
 	QMouseEvent* m_event;
+	QColor penColor;
+	int penSize;
 public:
 	CanvasCommand(CanvasReciever* _canvasReciever,
-	      		QWidget* _parent, QMouseEvent* _m_event=nullptr);
+	      		QWidget* _parent, QMouseEvent* _m_event);
+	CanvasCommand(CanvasReciever* _canvasReciever,
+			QWidget* _parent, QColor _penColor, int _penSize);
 	virtual void execute() override;
 	virtual void undo() override;
 	virtual void redo() override;
@@ -71,7 +76,7 @@ public:
 
 class UpdateCommand : public CanvasCommand {
 public:
-	UpdateCommand(CanvasReciever* _canvasReciever, QWidget* _parent);
+	UpdateCommand(CanvasReciever* _canvasReciever, QWidget* _parent, QColor _penColor, int _penSize);
 	virtual ~UpdateCommand();
 };
 

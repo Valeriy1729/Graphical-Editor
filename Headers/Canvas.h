@@ -23,16 +23,21 @@ class Canvas : public QWidget {
 	Q_OBJECT
 	Invoker* invoker;
 	Client* client;
+	QColor penColor;
+	int penSize;
 public:
 	Canvas(QWidget* parent=nullptr);
 	void setInvoker(Invoker* _invoker);
 	void setClient(Client* _client);
+	void setPenColor(QColor _penColor);
+	void setPenSize(int _penSize);
+
 	void mousePressEvent(QMouseEvent* event) override;
 	void mouseMoveEvent(QMouseEvent* event) override;
 	void mouseReleaseEvent(QMouseEvent* event) override;
 	void paintEvent(QPaintEvent* event) override;
-	~Canvas();
 
+	~Canvas();
 };
 
 

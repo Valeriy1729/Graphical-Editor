@@ -17,6 +17,7 @@ class ButtonPanel : public QWidget {
 	QGridLayout* g_layout {nullptr};
 	vector<PushButton*> ColButtons {};
 	PushButton* eraseBtn;
+	int penSize;
 	
 	const QColor Colors[COLORS_COUNT] {
 		Qt::red, QColor(0xff7700), Qt::yellow, Qt::green,
@@ -25,6 +26,8 @@ class ButtonPanel : public QWidget {
 	
 public:
 	ButtonPanel(QWidget* parent=nullptr);	
+	const vector<PushButton*>& getColButtons() const;
+	QColor getPenColor() const;
 	~ButtonPanel();
 };
 

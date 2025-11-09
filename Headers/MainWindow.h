@@ -4,6 +4,8 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QMouseEvent>
+#include <QShortcut>
+#include <QKeySequence>
 #include <iostream>
 #include "ButtonPanel.h"
 #include "Canvas.h"
@@ -23,7 +25,13 @@ class MainWindow : public QWidget {
 
 public:
 	MainWindow(QWidget* parent=nullptr);	
+	const ButtonPanel* getButtonPanel();
+	const Canvas* getCanvas();
 	~MainWindow();
+
+public slots:
+	void undo();
+	void redo();
 };
 
 

@@ -3,6 +3,7 @@
 
 #include <exception>
 #include <QWidget>
+#include <QColor>
 #include "Command/Commands.h"
 #include "Command/DrawReciever.h"
 
@@ -15,7 +16,7 @@ class Client {
 public:
 	Client();
 	CanvasCommand* getCanvasCommand(CommandType ReqType, QWidget* parent, QMouseEvent* event);
-	CanvasCommand* getCanvasCommand(CommandType ReqType, QWidget* parent);
+	CanvasCommand* getCanvasCommand(CommandType ReqType, QWidget* parent, QColor penColor, int penSize);
 	~Client();
 };
 

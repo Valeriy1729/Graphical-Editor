@@ -19,10 +19,10 @@ CanvasCommand* Client::getCanvasCommand(CommandType ReqType, QWidget* parent, QM
 	throw std::exception();
 }
 
-CanvasCommand* Client::getCanvasCommand(CommandType ReqType, QWidget* parent)
+CanvasCommand* Client::getCanvasCommand(CommandType ReqType, QWidget* parent, QColor penColor, int penSize)
 {
 	if(ReqType != CommandType::UPDATE) throw std::exception();
-	return new UpdateCommand(UpdateR, parent);
+	return new UpdateCommand(UpdateR, parent, penColor, penSize);
 }
 
 Client::~Client()
