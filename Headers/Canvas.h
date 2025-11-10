@@ -25,6 +25,7 @@ class Canvas : public QWidget {
 	Client* client;
 	QColor penColor;
 	int penSize;
+
 public:
 	Canvas(QWidget* parent=nullptr);
 	void setInvoker(Invoker* _invoker);

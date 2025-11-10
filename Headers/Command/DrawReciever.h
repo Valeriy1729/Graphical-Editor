@@ -8,6 +8,7 @@
 #include <QPaintEvent>
 #include <QPainter>
 #include <QPen>
+#include <QBrush>
 #include <deque>
 #include <iostream>
 #include "PainterPath.h"
@@ -26,7 +27,7 @@ public:
 };
 
 
-class CanvasReciever : public Reciever {
+class BrushReciever : public Reciever {
 protected:
 	static deque<PainterPath> pathHist;
 	static QPainterPath path;	
@@ -36,14 +37,14 @@ protected:
 	QWidget* parent;
 	QMouseEvent* m_event;
 public:
-	CanvasReciever();
+	BrushReciever();
 	void setFields(QWidget* parent, QMouseEvent* _m_event,
 			QColor _penColor, int _penSize);
-	virtual ~CanvasReciever();
+	virtual ~BrushReciever();
 };
 
 
-class DrawReciever : public CanvasReciever {
+class DrawReciever : public BrushReciever {
 public:
 	DrawReciever();
 	virtual void execute() override;
@@ -53,7 +54,7 @@ public:
 };
 
 
-class StartDrawReciever : public CanvasReciever {
+class StartDrawReciever : public BrushReciever {
 public:
 	StartDrawReciever();
 	virtual void execute() override;
@@ -63,7 +64,7 @@ public:
 };
 
 
-class EndDrawReciever : public CanvasReciever {
+class EndDrawReciever : public BrushReciever {
 public:
 	EndDrawReciever();
 	virtual void execute() override;
@@ -73,13 +74,23 @@ public:
 };
 
 
-class UpdateReciever : public CanvasReciever {
+class UpdateReciever : public BrushReciever {
 public:
 	UpdateReciever();
 	virtual void execute() override;
 	virtual void undo() override;	
 	virtual void redo() override;
 	virtual ~UpdateReciever();
+};
+
+
+class ImageReciever : public BrushReciever {
+public:
+	ImageReciever();
+	virtual void execute() override;
+	virtual void undo() override;	
+	virtual void redo() override;
+	virtual ~ImageReciever();
 };
 
 #endif

@@ -18,6 +18,8 @@ class ButtonPanel : public QWidget {
 	QGridLayout* g_layout {nullptr};
 	vector<PushButton*> ColButtons {};
 	PushButton* eraseBtn;
+	PushButton* imageAddBtn;
+	PushButton* textAddBtn;
 	Slider* sizeSlider;
 	int penSize;
 	
@@ -30,6 +32,8 @@ public:
 	ButtonPanel(QWidget* parent=nullptr);	
 	const vector<PushButton*>& getColButtons() const;
 	const PushButton* getEraseButton() const;
+	const PushButton* getImageButton() const;
+	const PushButton* getTextButton() const;
 	const Slider* getSizeSlider() const;
 	int getPenSize() const;
 	QColor getPenColor() const;

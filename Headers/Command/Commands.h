@@ -5,7 +5,7 @@
 #include <QColor>
 #include "DrawReciever.h"
 
-enum class CommandType { STARTDRAW, DRAW, ENDDRAW, UPDATE };
+enum class CommandType { STARTDRAW, DRAW, ENDDRAW, UPDATE, ADDIMAGE };
 
 
 class Command {
@@ -34,50 +34,78 @@ public:
 };
 
 
-class CanvasCommand : public Command {
+class DrawOnCanvasCommand : public Command {
 protected:
-	CanvasReciever* canvasReciever;
+	BrushReciever* brushReciever;
 	QWidget* parent;
 	QMouseEvent* m_event;
+public:
+	DrawOnCanvasCommand(BrushReciever* _brushReciever, QWidget* _parent, QMouseEvent* _m_event);
+	virtual ~DrawOnCanvasCommand();
+};
+
+
+class DrawWidgetCommand : public DrawOnCanvasCommand {
+public:
+	DrawWidgetCommand(BrushReciever* _brushReciever, QWidget* _parent, QMouseEvent* _m_event);
+	virtual void execute() override;
+	virtual void undo() override;
+	virtual void redo() override;
+	virtual ~DrawWidgetCommand();
+};
+
+
+class ImageCommand : public DrawWidgetCommand {
+	int width, heigth;
+	int x_cor, y_cor;
+public:
+	ImageCommand(BrushReciever* _brushReciever, QWidget* _parent, QMouseEvent* _event);
+	virtual ~ImageCommand();
+};
+
+
+class BrushCommand : public DrawOnCanvasCommand {
+protected:
 	static QColor penColor;
 	static int penSize;
 public:
-	CanvasCommand(CanvasReciever* _canvasReciever,
+	BrushCommand(BrushReciever* _brushReciever,
 	      		QWidget* _parent, QMouseEvent* _m_event);
-	CanvasCommand(CanvasReciever* _canvasReciever,
+	BrushCommand(BrushReciever* _brushReciever,
 			QWidget* _parent, QColor _penColor, int _penSize);
 	virtual void execute() override;
 	virtual void undo() override;
 	virtual void redo() override;
-	virtual ~CanvasCommand();
+	virtual ~BrushCommand();
 };
 
 
-class StartDrawCommand : public CanvasCommand {
+class StartDrawCommand : public BrushCommand {
 public:
-	StartDrawCommand(CanvasReciever* _canvasReciever, QWidget* _parent, QMouseEvent* _event);
+	StartDrawCommand(BrushReciever* _brushReciever, QWidget* _parent, QMouseEvent* _event);
 	virtual ~StartDrawCommand();
 };
 
 
-class DrawCommand : public CanvasCommand {
+class DrawCommand : public BrushCommand {
 public:
-	DrawCommand(CanvasReciever* _canvasReciever, QWidget* _parent, QMouseEvent* _event);
+	DrawCommand(BrushReciever* _brushReciever, QWidget* _parent, QMouseEvent* _event);
 	virtual ~DrawCommand();
 };
 
 
-class EndDrawCommand : public CanvasCommand {
+class EndDrawCommand : public BrushCommand {
 public:
-	EndDrawCommand(CanvasReciever* _canvasReciever, QWidget* _parent, QMouseEvent* _event);
+	EndDrawCommand(BrushReciever* _brushReciever, QWidget* _parent, QMouseEvent* _event);
 	virtual ~EndDrawCommand();
 };
 
 
-class UpdateCommand : public CanvasCommand {
+class UpdateCommand : public BrushCommand {
 public:
-	UpdateCommand(CanvasReciever* _canvasReciever, QWidget* _parent, QColor _penColor, int _penSize);
+	UpdateCommand(BrushReciever* _brushReciever, QWidget* _parent, QColor _penColor, int _penSize);
 	virtual ~UpdateCommand();
 };
+
 
 #endif

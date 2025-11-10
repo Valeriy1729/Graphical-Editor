@@ -11,6 +11,8 @@ void Connector::Signals_Slots_Connect()
 {
 	const vector<PushButton*> ColButtons {buttonPanel->getColButtons()};
 	const PushButton* eraseBtn {buttonPanel->getEraseButton()};
+	const PushButton* imageAddBtn {buttonPanel->getImageButton()};
+	const PushButton* textAddBtn {buttonPanel->getTextButton()};
 	const Slider* sizeSlider {buttonPanel->getSizeSlider()};
 
 	for(PushButton* pButton : ColButtons) {
@@ -21,6 +23,8 @@ void Connector::Signals_Slots_Connect()
 	connect(eraseBtn, SIGNAL(clicked()), eraseBtn, SLOT(slot_set_penColor()));
 	connect(eraseBtn, SIGNAL(signal_set_penColor()), this, SLOT(slot_set_penColor()));
 	connect(sizeSlider, SIGNAL(sliderReleased()), this, SLOT(slot_set_penSize()));
+	connect(imageAddBtn, SIGNAL(clicked()), this, SLOT(slot_add_image()));
+	connect(textAddBtn, SIGNAL(clicked()), this, SLOT(slot_add_text()));
 }
 
 void Connector::slot_set_penColor()
@@ -34,6 +38,12 @@ void Connector::slot_set_penSize()
 	Canvas* _canvas = const_cast<Canvas*>(canvas);
 	_canvas->setPenSize(buttonPanel->getPenSize());
 }
+
+void Connector::slot_add_image()
+{ } //!
+
+void Connector::slot_add_text()
+{ } //!
 
 void Connector::Shortcuts_Connect()
 {

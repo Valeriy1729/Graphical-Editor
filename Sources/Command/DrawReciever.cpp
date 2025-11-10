@@ -5,25 +5,26 @@ Reciever::Reciever()
 Reciever::~Reciever()
 { }
 
-CanvasReciever::CanvasReciever() : parent(nullptr), m_event(nullptr)
+BrushReciever::BrushReciever() : parent(nullptr), m_event(nullptr)
 { }
-CanvasReciever::~CanvasReciever()
+BrushReciever::~BrushReciever()
 { }
-void CanvasReciever::setFields(QWidget* _parent, QMouseEvent* _m_event, QColor _penColor, int _penSize)
+void BrushReciever::setFields(QWidget* _parent,
+		QMouseEvent* _m_event, QColor _penColor, int _penSize)
 {
 	parent = _parent;
 	m_event = _m_event;
 	penColor = _penColor;
 	penSize = _penSize;
 }
-deque<PainterPath> CanvasReciever::pathHist {};
-QPainterPath CanvasReciever::path {QPainterPath()};
-int CanvasReciever::currHistIndex{-1};
-QColor CanvasReciever::penColor{Qt::black};
-int CanvasReciever::penSize{15};
+deque<PainterPath> BrushReciever::pathHist {};
+QPainterPath BrushReciever::path {QPainterPath()};
+int BrushReciever::currHistIndex{-1};
+QColor BrushReciever::penColor{Qt::black};
+int BrushReciever::penSize{15};
 
 
-DrawReciever::DrawReciever() : CanvasReciever()
+DrawReciever::DrawReciever() : BrushReciever()
 { }
 void DrawReciever::execute()
 {
@@ -38,7 +39,7 @@ DrawReciever::~DrawReciever()
 { }
 
 
-StartDrawReciever::StartDrawReciever() : CanvasReciever()
+StartDrawReciever::StartDrawReciever() : BrushReciever()
 { }
 void StartDrawReciever::execute()
 {
@@ -54,7 +55,7 @@ StartDrawReciever::~StartDrawReciever()
 { }
 
 
-EndDrawReciever::EndDrawReciever() : CanvasReciever()
+EndDrawReciever::EndDrawReciever() : BrushReciever()
 { }
 void EndDrawReciever::execute()
 {
@@ -89,7 +90,7 @@ EndDrawReciever::~EndDrawReciever()
 { }
 
 
-UpdateReciever::UpdateReciever() : CanvasReciever()
+UpdateReciever::UpdateReciever() : BrushReciever()
 { }
 void UpdateReciever::execute()
 {
@@ -97,10 +98,14 @@ void UpdateReciever::execute()
 	QPainter painter(parent);
 	for(int i {0}; i <= currHistIndex; ++i) {
 		QPen pen(pathHist[i].getColor(), pathHist[i].getPenSize());
+		pen.setCapStyle(Qt::RoundCap);
+		pen.setJoinStyle(Qt::RoundJoin);
 		painter.setPen(pen);
 		painter.drawPath(pathHist[i].getPath());
 	}
 	QPen pen(penColor, penSize);
+	pen.setCapStyle(Qt::RoundCap);
+	pen.setJoinStyle(Qt::RoundJoin);
 	painter.setPen(pen);
 	painter.drawPath(path);
 	painter.end();
@@ -110,4 +115,15 @@ void UpdateReciever::undo()
 void UpdateReciever::redo()
 { }
 UpdateReciever::~UpdateReciever()
+{ }
+
+ImageReciever::ImageReciever() : BrushReciever()
+{ }
+void ImageReciever::execute()
+{ }
+void ImageReciever::undo()
+{ }
+void ImageReciever::redo()
+{ }
+ImageReciever::~ImageReciever()
 { }

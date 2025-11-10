@@ -10,7 +10,7 @@ Command::~Command()
 { }
 
 
-ComplexCommand::ComplexCommand() : reciever(nullptr)
+ComplexCommand::ComplexCommand()
 { }
 ComplexCommand::~ComplexCommand()
 { }
@@ -28,35 +28,55 @@ void ComplexCommand::redo()
 }
 
 
-CanvasCommand::CanvasCommand(CanvasReciever* _canvasReciever, QWidget* _parent, QMouseEvent* _m_event) :
-	canvasReciever(_canvasReciever), parent(_parent), m_event(_m_event)
+DrawOnCanvasCommand::DrawOnCanvasCommand(BrushReciever* _brushReciever, QWidget* _parent, QMouseEvent* _m_event) :
+	brushReciever(_brushReciever), parent(_parent), m_event(_m_event)
 { }
-CanvasCommand::CanvasCommand(CanvasReciever* _canvasReciever, QWidget* _parent, QColor _penColor, int _penSize) :
-	canvasReciever(_canvasReciever), parent(_parent)
+DrawOnCanvasCommand::~DrawOnCanvasCommand()
+{ }
+
+
+DrawWidgetCommand::DrawWidgetCommand(BrushReciever* _brushReciever, QWidget* _parent, QMouseEvent* _m_event) :
+	DrawOnCanvasCommand(_brushReciever, _parent, _m_event)
+{ }
+DrawWidgetCommand::~DrawWidgetCommand()
+{ }
+void DrawWidgetCommand::execute()
+{ }
+void DrawWidgetCommand::undo()
+{ }
+void DrawWidgetCommand::redo()
+{ }
+
+
+BrushCommand::BrushCommand(BrushReciever* _brushReciever, QWidget* _parent, QMouseEvent* _m_event) :
+	DrawOnCanvasCommand(_brushReciever, _parent, _m_event)
+{ }
+BrushCommand::BrushCommand(BrushReciever* _brushReciever, QWidget* _parent, QColor _penColor, int _penSize) :
+	DrawOnCanvasCommand(_brushReciever, _parent, nullptr)
 {
 	penColor = _penColor; penSize = _penSize;
 }
-CanvasCommand::~CanvasCommand()
+BrushCommand::~BrushCommand()
 { }
-void CanvasCommand::execute()
+void BrushCommand::execute()
 {
-	canvasReciever->setFields(parent, m_event, penColor, penSize);
-	canvasReciever->execute();
+	brushReciever->setFields(parent, m_event, penColor, penSize);
+	brushReciever->execute();
 }
-void CanvasCommand::undo()
+void BrushCommand::undo()
 {
-	canvasReciever->undo();	
+	brushReciever->undo();	
 }
-void CanvasCommand::redo()
+void BrushCommand::redo()
 {
-	canvasReciever->redo();	
+	brushReciever->redo();	
 }
-QColor CanvasCommand::penColor {Qt::black};
-int CanvasCommand::penSize {15};
+QColor BrushCommand::penColor {Qt::black};
+int BrushCommand::penSize {15};
 
 
-StartDrawCommand::StartDrawCommand(CanvasReciever* _canvasReciever, QWidget* _parent, QMouseEvent* _m_event) : 
-	CanvasCommand(_canvasReciever, _parent, _m_event)
+StartDrawCommand::StartDrawCommand(BrushReciever* _brushReciever, QWidget* _parent, QMouseEvent* _m_event) : 
+	BrushCommand(_brushReciever, _parent, _m_event)
 {
 	Type = CommandType::STARTDRAW; putInHist = false;
 }
@@ -64,8 +84,8 @@ StartDrawCommand::~StartDrawCommand()
 { }
 
 
-DrawCommand::DrawCommand(CanvasReciever* _canvasReciever, QWidget* _parent, QMouseEvent* _m_event) :
-	CanvasCommand(_canvasReciever, _parent, _m_event)
+DrawCommand::DrawCommand(BrushReciever* _brushReciever, QWidget* _parent, QMouseEvent* _m_event) :
+	BrushCommand(_brushReciever, _parent, _m_event)
 {
 	Type = CommandType::DRAW; putInHist = false;
 }
@@ -73,8 +93,8 @@ DrawCommand::~DrawCommand()
 { }
 
 
-EndDrawCommand::EndDrawCommand(CanvasReciever* _canvasReciever, QWidget* _parent, QMouseEvent* _m_event) :
-	CanvasCommand(_canvasReciever, _parent, _m_event)
+EndDrawCommand::EndDrawCommand(BrushReciever* _brushReciever, QWidget* _parent, QMouseEvent* _m_event) :
+	BrushCommand(_brushReciever, _parent, _m_event)
 {
 	Type = CommandType::ENDDRAW; putInHist = true;
 }
@@ -82,10 +102,19 @@ EndDrawCommand::~EndDrawCommand()
 { }
 
 
-UpdateCommand::UpdateCommand(CanvasReciever* _canvasReciever, QWidget* _parent, QColor _penColor, int _penSize) :
-	CanvasCommand(_canvasReciever, _parent, _penColor, _penSize)
+UpdateCommand::UpdateCommand(BrushReciever* _brushReciever, QWidget* _parent, QColor _penColor, int _penSize) :
+	BrushCommand(_brushReciever, _parent, _penColor, _penSize)
 {
 	Type = CommandType::UPDATE; putInHist = false;
 }
 UpdateCommand::~UpdateCommand()
+{ }
+
+
+ImageCommand::ImageCommand(BrushReciever* _brushReciever, QWidget* _parent, QMouseEvent* _m_event) :
+	DrawWidgetCommand(_brushReciever, _parent, _m_event)
+{
+	Type = CommandType::ADDIMAGE; putInHist = true;
+}
+ImageCommand::~ImageCommand()
 { }

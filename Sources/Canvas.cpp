@@ -29,7 +29,7 @@ void Canvas::setPenSize(int _penSize)
 void Canvas::mousePressEvent(QMouseEvent* event)
 {
 	if(event->button() == Qt::LeftButton)
-		invoker->execute(client->getCanvasCommand(CommandType::STARTDRAW, this, event));
+		invoker->execute(client->getBrushCommand(CommandType::STARTDRAW, this, event));
 	else if(event->button() == Qt::RightButton)
 		invoker->undo();
 	else if(event->button() == Qt::MiddleButton)
@@ -39,19 +39,19 @@ void Canvas::mousePressEvent(QMouseEvent* event)
 void Canvas::mouseMoveEvent(QMouseEvent* event)
 {
 	if(event->buttons() & Qt::LeftButton)
-		invoker->execute(client->getCanvasCommand(CommandType::DRAW, this, event));
+		invoker->execute(client->getBrushCommand(CommandType::DRAW, this, event));
 }
 
 void Canvas::mouseReleaseEvent(QMouseEvent* event)
 {
 	if(event->button() == Qt::LeftButton)
-		invoker->execute(client->getCanvasCommand(CommandType::ENDDRAW, this, event));
+		invoker->execute(client->getBrushCommand(CommandType::ENDDRAW, this, event));
 }
 
 void Canvas::paintEvent(QPaintEvent* event)
 {
 	Q_UNUSED(event);
-	invoker->execute(client->getCanvasCommand(CommandType::UPDATE, this, penColor, penSize));
+	invoker->execute(client->getBrushCommand(CommandType::UPDATE, this, penColor, penSize));
 }
 
 Canvas::~Canvas()

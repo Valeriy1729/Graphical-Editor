@@ -26,6 +26,8 @@ public:
 public slots:
 	void slot_set_penColor();
 	void slot_set_penSize();
+	void slot_add_image();
+	void slot_add_text();
 };
 
 
