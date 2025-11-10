@@ -27,6 +27,7 @@ class ButtonPanel : public QWidget {
 public:
 	ButtonPanel(QWidget* parent=nullptr);	
 	const vector<PushButton*>& getColButtons() const;
+	const PushButton* getEraseButton() const;
 	QColor getPenColor() const;
 	~ButtonPanel();
 };

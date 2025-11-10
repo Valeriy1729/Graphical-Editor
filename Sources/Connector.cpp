@@ -10,11 +10,13 @@ Connector::Connector(MainWindow* _mainWindow)
 void Connector::Signals_Slots_Connect()
 {
 	const vector<PushButton*> ColButtons {buttonPanel->getColButtons()};
+	const PushButton* eraseBtn {buttonPanel->getEraseButton()};
 	for(PushButton* pButton : ColButtons) {
 		connect(pButton, SIGNAL(clicked()), pButton, SLOT(slot_set_penColor()));
 		connect(pButton, SIGNAL(signal_set_penColor()), this, SLOT(slot_set_penColor()));
 	}
-	
+	connect(eraseBtn, SIGNAL(clicked()), eraseBtn, SLOT(slot_set_penColor()));
+	connect(eraseBtn, SIGNAL(signal_set_penColor()), this, SLOT(slot_set_penColor()));
 }
 
 void Connector::slot_set_penColor()

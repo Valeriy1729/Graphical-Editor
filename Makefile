@@ -56,12 +56,13 @@ SOURCES       = Sources/PushButton.cpp \
 		Sources/MainWindow.cpp \
 		Sources/ButtonPanel.cpp \
 		Sources/Canvas.cpp \
-		Sources/Connector.cpp \
 		Sources/main.cpp \
 		Sources/Command/Commands.cpp \
 		Sources/Command/Client.cpp \
 		Sources/Command/DrawReciever.cpp \
-		Sources/Command/Invoker.cpp moc_PushButton.cpp \
+		Sources/Command/Invoker.cpp \
+		Sources/PainterPath.cpp \
+		Sources/Connector.cpp moc_PushButton.cpp \
 		moc_MainWindow.cpp \
 		moc_ButtonPanel.cpp \
 		moc_Canvas.cpp \
@@ -70,12 +71,13 @@ OBJECTS       = Objects/PushButton.o \
 		Objects/MainWindow.o \
 		Objects/ButtonPanel.o \
 		Objects/Canvas.o \
-		Objects/Connector.o \
 		Objects/main.o \
 		Objects/Commands.o \
 		Objects/Client.o \
 		Objects/DrawReciever.o \
 		Objects/Invoker.o \
+		Objects/PainterPath.o \
+		Objects/Connector.o \
 		Objects/moc_PushButton.o \
 		Objects/moc_MainWindow.o \
 		Objects/moc_ButtonPanel.o \
@@ -162,20 +164,22 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		Headers/MainWindow.h \
 		Headers/ButtonPanel.h \
 		Headers/Canvas.h \
-		Headers/Connector.h \
 		Headers/Command/Commands.h \
 		Headers/Command/Client.h \
 		Headers/Command/DrawReciever.h \
-		Headers/Command/Invoker.h Sources/PushButton.cpp \
+		Headers/Command/Invoker.h \
+		Headers/PainterPath.h \
+		Headers/Connector.h Sources/PushButton.cpp \
 		Sources/MainWindow.cpp \
 		Sources/ButtonPanel.cpp \
 		Sources/Canvas.cpp \
-		Sources/Connector.cpp \
 		Sources/main.cpp \
 		Sources/Command/Commands.cpp \
 		Sources/Command/Client.cpp \
 		Sources/Command/DrawReciever.cpp \
-		Sources/Command/Invoker.cpp
+		Sources/Command/Invoker.cpp \
+		Sources/PainterPath.cpp \
+		Sources/Connector.cpp
 QMAKE_TARGET  = Paint
 DESTDIR       = 
 TARGET        = Paint
@@ -359,8 +363,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents Headers/PushButton.h Headers/MainWindow.h Headers/ButtonPanel.h Headers/Canvas.h Headers/Connector.h Headers/Command/Commands.h Headers/Command/Client.h Headers/Command/DrawReciever.h Headers/Command/Invoker.h $(DISTDIR)/
-	$(COPY_FILE) --parents Sources/PushButton.cpp Sources/MainWindow.cpp Sources/ButtonPanel.cpp Sources/Canvas.cpp Sources/Connector.cpp Sources/main.cpp Sources/Command/Commands.cpp Sources/Command/Client.cpp Sources/Command/DrawReciever.cpp Sources/Command/Invoker.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents Headers/PushButton.h Headers/MainWindow.h Headers/ButtonPanel.h Headers/Canvas.h Headers/Command/Commands.h Headers/Command/Client.h Headers/Command/DrawReciever.h Headers/Command/Invoker.h Headers/PainterPath.h Headers/Connector.h $(DISTDIR)/
+	$(COPY_FILE) --parents Sources/PushButton.cpp Sources/MainWindow.cpp Sources/ButtonPanel.cpp Sources/Canvas.cpp Sources/main.cpp Sources/Command/Commands.cpp Sources/Command/Client.cpp Sources/Command/DrawReciever.cpp Sources/Command/Invoker.cpp Sources/PainterPath.cpp Sources/Connector.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -406,6 +410,7 @@ moc_MainWindow.cpp: Headers/MainWindow.h \
 		Headers/Command/Client.h \
 		Headers/Command/Commands.h \
 		Headers/Command/DrawReciever.h \
+		Headers/PainterPath.h \
 		Headers/Command/Invoker.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
@@ -421,6 +426,7 @@ moc_Canvas.cpp: Headers/Canvas.h \
 		Headers/Command/Client.h \
 		Headers/Command/Commands.h \
 		Headers/Command/DrawReciever.h \
+		Headers/PainterPath.h \
 		Headers/Command/Invoker.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
@@ -434,6 +440,7 @@ moc_Connector.cpp: Headers/Connector.h \
 		Headers/Command/Client.h \
 		Headers/Command/Commands.h \
 		Headers/Command/DrawReciever.h \
+		Headers/PainterPath.h \
 		Headers/Command/Invoker.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
@@ -465,6 +472,7 @@ Objects/MainWindow.o: Sources/MainWindow.cpp Headers/MainWindow.h \
 		Headers/Command/Client.h \
 		Headers/Command/Commands.h \
 		Headers/Command/DrawReciever.h \
+		Headers/PainterPath.h \
 		Headers/Command/Invoker.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Objects/MainWindow.o Sources/MainWindow.cpp
 
@@ -476,8 +484,45 @@ Objects/Canvas.o: Sources/Canvas.cpp Headers/Canvas.h \
 		Headers/Command/Client.h \
 		Headers/Command/Commands.h \
 		Headers/Command/DrawReciever.h \
+		Headers/PainterPath.h \
 		Headers/Command/Invoker.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Objects/Canvas.o Sources/Canvas.cpp
+
+Objects/main.o: Sources/main.cpp Headers/MainWindow.h \
+		Headers/ButtonPanel.h \
+		Headers/PushButton.h \
+		Headers/Canvas.h \
+		Headers/Command/Client.h \
+		Headers/Command/Commands.h \
+		Headers/Command/DrawReciever.h \
+		Headers/PainterPath.h \
+		Headers/Command/Invoker.h \
+		Headers/Connector.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Objects/main.o Sources/main.cpp
+
+Objects/Commands.o: Sources/Command/Commands.cpp Headers/Command/Commands.h \
+		Headers/Command/DrawReciever.h \
+		Headers/PainterPath.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Objects/Commands.o Sources/Command/Commands.cpp
+
+Objects/Client.o: Sources/Command/Client.cpp Headers/Command/Client.h \
+		Headers/Command/Commands.h \
+		Headers/Command/DrawReciever.h \
+		Headers/PainterPath.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Objects/Client.o Sources/Command/Client.cpp
+
+Objects/DrawReciever.o: Sources/Command/DrawReciever.cpp Headers/Command/DrawReciever.h \
+		Headers/PainterPath.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Objects/DrawReciever.o Sources/Command/DrawReciever.cpp
+
+Objects/Invoker.o: Sources/Command/Invoker.cpp Headers/Command/Invoker.h \
+		Headers/Command/Commands.h \
+		Headers/Command/DrawReciever.h \
+		Headers/PainterPath.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Objects/Invoker.o Sources/Command/Invoker.cpp
+
+Objects/PainterPath.o: Sources/PainterPath.cpp Headers/PainterPath.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Objects/PainterPath.o Sources/PainterPath.cpp
 
 Objects/Connector.o: Sources/Connector.cpp Headers/Connector.h \
 		Headers/MainWindow.h \
@@ -487,36 +532,9 @@ Objects/Connector.o: Sources/Connector.cpp Headers/Connector.h \
 		Headers/Command/Client.h \
 		Headers/Command/Commands.h \
 		Headers/Command/DrawReciever.h \
+		Headers/PainterPath.h \
 		Headers/Command/Invoker.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Objects/Connector.o Sources/Connector.cpp
-
-Objects/main.o: Sources/main.cpp Headers/MainWindow.h \
-		Headers/ButtonPanel.h \
-		Headers/PushButton.h \
-		Headers/Canvas.h \
-		Headers/Command/Client.h \
-		Headers/Command/Commands.h \
-		Headers/Command/DrawReciever.h \
-		Headers/Command/Invoker.h \
-		Headers/Connector.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Objects/main.o Sources/main.cpp
-
-Objects/Commands.o: Sources/Command/Commands.cpp Headers/Command/Commands.h \
-		Headers/Command/DrawReciever.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Objects/Commands.o Sources/Command/Commands.cpp
-
-Objects/Client.o: Sources/Command/Client.cpp Headers/Command/Client.h \
-		Headers/Command/Commands.h \
-		Headers/Command/DrawReciever.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Objects/Client.o Sources/Command/Client.cpp
-
-Objects/DrawReciever.o: Sources/Command/DrawReciever.cpp Headers/Command/DrawReciever.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Objects/DrawReciever.o Sources/Command/DrawReciever.cpp
-
-Objects/Invoker.o: Sources/Command/Invoker.cpp Headers/Command/Invoker.h \
-		Headers/Command/Commands.h \
-		Headers/Command/DrawReciever.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Objects/Invoker.o Sources/Command/Invoker.cpp
 
 Objects/moc_PushButton.o: moc_PushButton.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Objects/moc_PushButton.o moc_PushButton.cpp

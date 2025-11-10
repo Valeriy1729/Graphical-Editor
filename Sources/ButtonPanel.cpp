@@ -19,6 +19,11 @@ const vector<PushButton*>& ButtonPanel::getColButtons() const
 	return const_cast<const vector<PushButton*>&>(ColButtons);
 }
 
+const PushButton* ButtonPanel::getEraseButton() const
+{
+	return const_cast<const PushButton*>(eraseBtn);
+}
+
 QColor ButtonPanel::getPenColor() const
 {
 	return ColButtons[0]->getPenColor();	
