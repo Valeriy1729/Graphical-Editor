@@ -32,8 +32,10 @@ CanvasCommand::CanvasCommand(CanvasReciever* _canvasReciever, QWidget* _parent, 
 	canvasReciever(_canvasReciever), parent(_parent), m_event(_m_event)
 { }
 CanvasCommand::CanvasCommand(CanvasReciever* _canvasReciever, QWidget* _parent, QColor _penColor, int _penSize) :
-	canvasReciever(_canvasReciever), parent(_parent), penColor(_penColor), penSize(_penSize)
-{ }
+	canvasReciever(_canvasReciever), parent(_parent)
+{
+	penColor = _penColor; penSize = _penSize;
+}
 CanvasCommand::~CanvasCommand()
 { }
 void CanvasCommand::execute()
@@ -49,6 +51,8 @@ void CanvasCommand::redo()
 {
 	canvasReciever->redo();	
 }
+QColor CanvasCommand::penColor {Qt::black};
+int CanvasCommand::penSize {15};
 
 
 StartDrawCommand::StartDrawCommand(CanvasReciever* _canvasReciever, QWidget* _parent, QMouseEvent* _m_event) : 

@@ -10,11 +10,10 @@
 #include <QPen>
 #include <deque>
 #include <iostream>
+#include "PainterPath.h"
 
 using std::deque;
 class CanvasCommand;
-
-enum class Reciever_Consts { MAX_HIST_LEN = 17 };
 
 
 class Reciever {
@@ -29,13 +28,13 @@ public:
 
 class CanvasReciever : public Reciever {
 protected:
-	static deque<QPainterPath> pathHist;
+	static deque<PainterPath> pathHist;
 	static QPainterPath path;	
+	static int currHistIndex;
+	static QColor penColor;
+	static int penSize;
 	QWidget* parent;
 	QMouseEvent* m_event;
-	QColor penColor;
-	int penSize;
-	int currHistIndex;
 public:
 	CanvasReciever();
 	void setFields(QWidget* parent, QMouseEvent* _m_event,

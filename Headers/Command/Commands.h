@@ -39,8 +39,8 @@ protected:
 	CanvasReciever* canvasReciever;
 	QWidget* parent;
 	QMouseEvent* m_event;
-	QColor penColor;
-	int penSize;
+	static QColor penColor;
+	static int penSize;
 public:
 	CanvasCommand(CanvasReciever* _canvasReciever,
 	      		QWidget* _parent, QMouseEvent* _m_event);

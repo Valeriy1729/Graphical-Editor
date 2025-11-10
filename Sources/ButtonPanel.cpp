@@ -3,7 +3,7 @@
 ButtonPanel::ButtonPanel(QWidget* parent) : QWidget(parent)
 {
 	g_layout = new QGridLayout(this);
-	eraseBtn = new PushButton(this, 0xeeeeee, "Erase");
+	eraseBtn = new PushButton(this, 0xeeeeee, "Eraser");
 
 	for(int i {0}; i < BUTTON_COUNT; ++i) {
 		PushButton* btn {new PushButton(this, Colors[i])};
@@ -12,6 +12,16 @@ ButtonPanel::ButtonPanel(QWidget* parent) : QWidget(parent)
 	}
 
 	g_layout->addWidget(eraseBtn, BUTTON_COUNT / COLUMN_COUNT, 0, 1, 2);
+}
+
+const vector<PushButton*>& ButtonPanel::getColButtons() const
+{
+	return const_cast<const vector<PushButton*>&>(ColButtons);
+}
+
+QColor ButtonPanel::getPenColor() const
+{
+	return ColButtons[0]->getPenColor();	
 }
 
 ButtonPanel::~ButtonPanel()

@@ -16,18 +16,11 @@ void Invoker::clearHistFuture()
 
 void Invoker::execute(Command* command)
 {
-	int histSize {static_cast<int>(History.size())};
-	int MAX_HIST_LEN {static_cast<int>(Invoker_Consts::MAX_HIST_LEN)};
-
 	command->execute();
 
 	if(command->getHistoryFlag() == true) {
 		clearHistFuture();
 		History.push_back(command);
-		if(histSize > MAX_HIST_LEN) {
-			History.pop_front();
-			--currHistIndex;
-		}
 	} else
 		delete command;
 }
