@@ -17,12 +17,15 @@ class Connector : public QWidget {
 	const MainWindow* mainWindow;
 	const ButtonPanel* buttonPanel;
 	const Canvas* canvas;
+
 public:
 	Connector(MainWindow* _mainWindow);
 	void Signals_Slots_Connect();		
 	void Shortcuts_Connect();		
+
 public slots:
 	void slot_set_penColor();
+	void slot_set_penSize();
 };
 
 

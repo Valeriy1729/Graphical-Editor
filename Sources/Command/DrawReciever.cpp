@@ -63,7 +63,7 @@ void EndDrawReciever::execute()
 	for(int i {++currHistIndex}; i < histSize; ++i)
 		pathHist.pop_back();
 
-	pathHist.push_back(PainterPath(penColor, path));
+	pathHist.push_back(PainterPath(penColor, path, penSize));
 	std::cout << (penColor == Qt::cyan) << std::endl;
 	std::cout << "EndDraw: " << currHistIndex << std::endl;
 
@@ -96,7 +96,7 @@ void UpdateReciever::execute()
 	std::cout << "pathhist len: " << pathHist.size() << " currInd: " << currHistIndex << std::endl;
 	QPainter painter(parent);
 	for(int i {0}; i <= currHistIndex; ++i) {
-		QPen pen(pathHist[i].getColor(), penSize);
+		QPen pen(pathHist[i].getColor(), pathHist[i].getPenSize());
 		painter.setPen(pen);
 		painter.drawPath(pathHist[i].getPath());
 	}

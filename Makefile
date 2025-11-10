@@ -62,11 +62,13 @@ SOURCES       = Sources/PushButton.cpp \
 		Sources/Command/DrawReciever.cpp \
 		Sources/Command/Invoker.cpp \
 		Sources/PainterPath.cpp \
-		Sources/Connector.cpp moc_PushButton.cpp \
+		Sources/Connector.cpp \
+		Sources/Slider.cpp moc_PushButton.cpp \
 		moc_MainWindow.cpp \
 		moc_ButtonPanel.cpp \
 		moc_Canvas.cpp \
-		moc_Connector.cpp
+		moc_Connector.cpp \
+		moc_Slider.cpp
 OBJECTS       = Objects/PushButton.o \
 		Objects/MainWindow.o \
 		Objects/ButtonPanel.o \
@@ -78,11 +80,13 @@ OBJECTS       = Objects/PushButton.o \
 		Objects/Invoker.o \
 		Objects/PainterPath.o \
 		Objects/Connector.o \
+		Objects/Slider.o \
 		Objects/moc_PushButton.o \
 		Objects/moc_MainWindow.o \
 		Objects/moc_ButtonPanel.o \
 		Objects/moc_Canvas.o \
-		Objects/moc_Connector.o
+		Objects/moc_Connector.o \
+		Objects/moc_Slider.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -169,7 +173,8 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		Headers/Command/DrawReciever.h \
 		Headers/Command/Invoker.h \
 		Headers/PainterPath.h \
-		Headers/Connector.h Sources/PushButton.cpp \
+		Headers/Connector.h \
+		Headers/Slider.h Sources/PushButton.cpp \
 		Sources/MainWindow.cpp \
 		Sources/ButtonPanel.cpp \
 		Sources/Canvas.cpp \
@@ -179,7 +184,8 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		Sources/Command/DrawReciever.cpp \
 		Sources/Command/Invoker.cpp \
 		Sources/PainterPath.cpp \
-		Sources/Connector.cpp
+		Sources/Connector.cpp \
+		Sources/Slider.cpp
 QMAKE_TARGET  = Paint
 DESTDIR       = 
 TARGET        = Paint
@@ -363,8 +369,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents Headers/PushButton.h Headers/MainWindow.h Headers/ButtonPanel.h Headers/Canvas.h Headers/Command/Commands.h Headers/Command/Client.h Headers/Command/DrawReciever.h Headers/Command/Invoker.h Headers/PainterPath.h Headers/Connector.h $(DISTDIR)/
-	$(COPY_FILE) --parents Sources/PushButton.cpp Sources/MainWindow.cpp Sources/ButtonPanel.cpp Sources/Canvas.cpp Sources/main.cpp Sources/Command/Commands.cpp Sources/Command/Client.cpp Sources/Command/DrawReciever.cpp Sources/Command/Invoker.cpp Sources/PainterPath.cpp Sources/Connector.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents Headers/PushButton.h Headers/MainWindow.h Headers/ButtonPanel.h Headers/Canvas.h Headers/Command/Commands.h Headers/Command/Client.h Headers/Command/DrawReciever.h Headers/Command/Invoker.h Headers/PainterPath.h Headers/Connector.h Headers/Slider.h $(DISTDIR)/
+	$(COPY_FILE) --parents Sources/PushButton.cpp Sources/MainWindow.cpp Sources/ButtonPanel.cpp Sources/Canvas.cpp Sources/main.cpp Sources/Command/Commands.cpp Sources/Command/Client.cpp Sources/Command/DrawReciever.cpp Sources/Command/Invoker.cpp Sources/PainterPath.cpp Sources/Connector.cpp Sources/Slider.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -395,9 +401,9 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 	g++ -pipe -O2 -Wall -Wextra -dM -E -o moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_PushButton.cpp moc_MainWindow.cpp moc_ButtonPanel.cpp moc_Canvas.cpp moc_Connector.cpp
+compiler_moc_header_make_all: moc_PushButton.cpp moc_MainWindow.cpp moc_ButtonPanel.cpp moc_Canvas.cpp moc_Connector.cpp moc_Slider.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_PushButton.cpp moc_MainWindow.cpp moc_ButtonPanel.cpp moc_Canvas.cpp moc_Connector.cpp
+	-$(DEL_FILE) moc_PushButton.cpp moc_MainWindow.cpp moc_ButtonPanel.cpp moc_Canvas.cpp moc_Connector.cpp moc_Slider.cpp
 moc_PushButton.cpp: Headers/PushButton.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
@@ -406,6 +412,7 @@ moc_PushButton.cpp: Headers/PushButton.h \
 moc_MainWindow.cpp: Headers/MainWindow.h \
 		Headers/ButtonPanel.h \
 		Headers/PushButton.h \
+		Headers/Slider.h \
 		Headers/Canvas.h \
 		Headers/Command/Client.h \
 		Headers/Command/Commands.h \
@@ -418,6 +425,7 @@ moc_MainWindow.cpp: Headers/MainWindow.h \
 
 moc_ButtonPanel.cpp: Headers/ButtonPanel.h \
 		Headers/PushButton.h \
+		Headers/Slider.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/eust/Scripts/Qt/Paint/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/eust/Scripts/Qt/Paint -I/home/eust/Scripts/Qt/Paint/Headers -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include Headers/ButtonPanel.h -o moc_ButtonPanel.cpp
@@ -436,6 +444,7 @@ moc_Connector.cpp: Headers/Connector.h \
 		Headers/MainWindow.h \
 		Headers/ButtonPanel.h \
 		Headers/PushButton.h \
+		Headers/Slider.h \
 		Headers/Canvas.h \
 		Headers/Command/Client.h \
 		Headers/Command/Commands.h \
@@ -445,6 +454,11 @@ moc_Connector.cpp: Headers/Connector.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/eust/Scripts/Qt/Paint/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/eust/Scripts/Qt/Paint -I/home/eust/Scripts/Qt/Paint/Headers -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include Headers/Connector.h -o moc_Connector.cpp
+
+moc_Slider.cpp: Headers/Slider.h \
+		moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/eust/Scripts/Qt/Paint/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/eust/Scripts/Qt/Paint -I/home/eust/Scripts/Qt/Paint/Headers -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include Headers/Slider.h -o moc_Slider.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -468,6 +482,7 @@ Objects/PushButton.o: Sources/PushButton.cpp Headers/PushButton.h
 Objects/MainWindow.o: Sources/MainWindow.cpp Headers/MainWindow.h \
 		Headers/ButtonPanel.h \
 		Headers/PushButton.h \
+		Headers/Slider.h \
 		Headers/Canvas.h \
 		Headers/Command/Client.h \
 		Headers/Command/Commands.h \
@@ -477,7 +492,8 @@ Objects/MainWindow.o: Sources/MainWindow.cpp Headers/MainWindow.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Objects/MainWindow.o Sources/MainWindow.cpp
 
 Objects/ButtonPanel.o: Sources/ButtonPanel.cpp Headers/ButtonPanel.h \
-		Headers/PushButton.h
+		Headers/PushButton.h \
+		Headers/Slider.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Objects/ButtonPanel.o Sources/ButtonPanel.cpp
 
 Objects/Canvas.o: Sources/Canvas.cpp Headers/Canvas.h \
@@ -491,6 +507,7 @@ Objects/Canvas.o: Sources/Canvas.cpp Headers/Canvas.h \
 Objects/main.o: Sources/main.cpp Headers/MainWindow.h \
 		Headers/ButtonPanel.h \
 		Headers/PushButton.h \
+		Headers/Slider.h \
 		Headers/Canvas.h \
 		Headers/Command/Client.h \
 		Headers/Command/Commands.h \
@@ -528,6 +545,7 @@ Objects/Connector.o: Sources/Connector.cpp Headers/Connector.h \
 		Headers/MainWindow.h \
 		Headers/ButtonPanel.h \
 		Headers/PushButton.h \
+		Headers/Slider.h \
 		Headers/Canvas.h \
 		Headers/Command/Client.h \
 		Headers/Command/Commands.h \
@@ -535,6 +553,9 @@ Objects/Connector.o: Sources/Connector.cpp Headers/Connector.h \
 		Headers/PainterPath.h \
 		Headers/Command/Invoker.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Objects/Connector.o Sources/Connector.cpp
+
+Objects/Slider.o: Sources/Slider.cpp Headers/Slider.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Objects/Slider.o Sources/Slider.cpp
 
 Objects/moc_PushButton.o: moc_PushButton.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Objects/moc_PushButton.o moc_PushButton.cpp
@@ -550,6 +571,9 @@ Objects/moc_Canvas.o: moc_Canvas.cpp
 
 Objects/moc_Connector.o: moc_Connector.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Objects/moc_Connector.o moc_Connector.cpp
+
+Objects/moc_Slider.o: moc_Slider.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Objects/moc_Slider.o moc_Slider.cpp
 
 ####### Install
 

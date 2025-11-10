@@ -5,6 +5,7 @@
 #include <QGridLayout>
 #include <vector>
 #include "PushButton.h"
+#include "Slider.h"
 
 using std::vector;
 
@@ -17,6 +18,7 @@ class ButtonPanel : public QWidget {
 	QGridLayout* g_layout {nullptr};
 	vector<PushButton*> ColButtons {};
 	PushButton* eraseBtn;
+	Slider* sizeSlider;
 	int penSize;
 	
 	const QColor Colors[COLORS_COUNT] {
@@ -28,6 +30,8 @@ public:
 	ButtonPanel(QWidget* parent=nullptr);	
 	const vector<PushButton*>& getColButtons() const;
 	const PushButton* getEraseButton() const;
+	const Slider* getSizeSlider() const;
+	int getPenSize() const;
 	QColor getPenColor() const;
 	~ButtonPanel();
 };
