@@ -11,6 +11,7 @@
 #include <QGridLayout>
 #include <QPainterPath>
 #include <QInputDialog>
+#include <QFileDialog>
 #include <QLineEdit>
 #include <vector>
 #include "Command/Client.h"
