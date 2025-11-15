@@ -5,7 +5,31 @@ Reciever::Reciever()
 Reciever::~Reciever()
 { }
 
-BrushReciever::BrushReciever() : parent(nullptr), m_event(nullptr)
+
+DrawOnCanvasReciever::DrawOnCanvasReciever() : parent(nullptr), m_event(nullptr)
+{ }
+DrawOnCanvasReciever::~DrawOnCanvasReciever()
+{ }
+void DrawOnCanvasReciever::setFields(QWidget* _parent,
+		QMouseEvent* _m_event, QColor _penColor, int _penSize)
+{ }
+void DrawOnCanvasReciever::setFields(QWidget* _parent,
+		QMouseEvent* _m_event, int _width, int _height, QString _name)
+{ }
+void DrawOnCanvasReciever::setFields(QWidget* _parent,
+		QMouseEvent* _m_event, QString _text)
+{ }
+deque<Path*> DrawOnCanvasReciever::drawHist {};
+int DrawOnCanvasReciever::currHistIndex{-1};
+
+
+DrawWidgetReciever::DrawWidgetReciever()
+{ }
+DrawWidgetReciever::~DrawWidgetReciever()
+{ }
+
+
+BrushReciever::BrushReciever()
 { }
 BrushReciever::~BrushReciever()
 { }
@@ -17,11 +41,9 @@ void BrushReciever::setFields(QWidget* _parent,
 	penColor = _penColor;
 	penSize = _penSize;
 }
-deque<PainterPath> BrushReciever::pathHist {};
-QPainterPath BrushReciever::path {QPainterPath()};
-int BrushReciever::currHistIndex{-1};
 QColor BrushReciever::penColor{Qt::black};
 int BrushReciever::penSize{15};
+QPainterPath BrushReciever::path {QPainterPath()};
 
 
 DrawReciever::DrawReciever() : BrushReciever()
@@ -59,14 +81,16 @@ EndDrawReciever::EndDrawReciever() : BrushReciever()
 { }
 void EndDrawReciever::execute()
 {
-	int histSize {static_cast<int>(pathHist.size())};
+	int histSize {static_cast<int>(drawHist.size())};
 
-	for(int i {++currHistIndex}; i < histSize; ++i)
-		pathHist.pop_back();
+	Path* tmpPath;
+	for(int i {++currHistIndex}; i < histSize; ++i) {
+		tmpPath = drawHist.back();
+		drawHist.pop_back();
+		delete tmpPath;
+	}
 
-	pathHist.push_back(PainterPath(penColor, path, penSize));
-	std::cout << (penColor == Qt::cyan) << std::endl;
-	std::cout << "EndDraw: " << currHistIndex << std::endl;
+	drawHist.push_back(new PainterPath(penColor, path, penSize));
 
 	path.lineTo(m_event->pos());
 	parent->update();
@@ -81,7 +105,7 @@ void EndDrawReciever::undo()
 }
 void EndDrawReciever::redo()
 {
-	int histSize {static_cast<int>(pathHist.size())};
+	int histSize {static_cast<int>(drawHist.size())};
 	if(currHistIndex >= histSize - 1) return;
 	++currHistIndex;
 	parent->update();
@@ -94,14 +118,9 @@ UpdateReciever::UpdateReciever() : BrushReciever()
 { }
 void UpdateReciever::execute()
 {
-	std::cout << "pathhist len: " << pathHist.size() << " currInd: " << currHistIndex << std::endl;
 	QPainter painter(parent);
 	for(int i {0}; i <= currHistIndex; ++i) {
-		QPen pen(pathHist[i].getColor(), pathHist[i].getPenSize());
-		pen.setCapStyle(Qt::RoundCap);
-		pen.setJoinStyle(Qt::RoundJoin);
-		painter.setPen(pen);
-		painter.drawPath(pathHist[i].getPath());
+		drawHist[i]->draw(&painter);
 	}
 	QPen pen(penColor, penSize);
 	pen.setCapStyle(Qt::RoundCap);
@@ -117,13 +136,81 @@ void UpdateReciever::redo()
 UpdateReciever::~UpdateReciever()
 { }
 
-ImageReciever::ImageReciever() : BrushReciever()
+ImageReciever::ImageReciever() : DrawWidgetReciever()
 { }
 void ImageReciever::execute()
-{ }
+{
+	int histSize {static_cast<int>(drawHist.size())};
+
+	Path* tmpPath;
+	for(int i {++currHistIndex}; i < histSize; ++i) {
+		tmpPath = drawHist.back();
+		drawHist.pop_back();
+		delete tmpPath;
+	}
+
+	drawHist.push_back(new ImagePath(m_event->x(), m_event->y(), width, height, name));
+	parent->update();
+}
 void ImageReciever::undo()
-{ }
+{
+	if(currHistIndex == -1) return;
+	--currHistIndex;
+	parent->update();
+}
 void ImageReciever::redo()
-{ }
+{
+	int histSize {static_cast<int>(drawHist.size())};
+	if(currHistIndex >= histSize - 1) return;
+	++currHistIndex;
+	parent->update();
+}
+void ImageReciever::setFields(QWidget* _parent, QMouseEvent* _m_event, int _width, int _height, QString _name)
+{
+	parent = _parent;
+	m_event = _m_event;
+	width = _width;
+	height = _height;
+	name = _name;
+}
 ImageReciever::~ImageReciever()
+{ }
+
+
+TextReciever::TextReciever() : DrawWidgetReciever()
+{ }
+void TextReciever::execute()
+{
+	int histSize {static_cast<int>(drawHist.size())};
+
+	Path* tmpPath;
+	for(int i {++currHistIndex}; i < histSize; ++i) {
+		tmpPath = drawHist.back();
+		drawHist.pop_back();
+		delete tmpPath;
+	}
+
+	drawHist.push_back(new TextPath(m_event->x(), m_event->y(), text));
+	parent->update();
+}
+void TextReciever::undo()
+{
+	if(currHistIndex == -1) return;
+	--currHistIndex;
+	parent->update();
+}
+void TextReciever::redo()
+{
+	int histSize {static_cast<int>(drawHist.size())};
+	if(currHistIndex >= histSize - 1) return;
+	++currHistIndex;
+	parent->update();
+}
+void TextReciever::setFields(QWidget* _parent, QMouseEvent* _m_event, QString _text)
+{
+	parent = _parent;
+	m_event = _m_event;
+	text = _text;
+}
+TextReciever::~TextReciever()
 { }

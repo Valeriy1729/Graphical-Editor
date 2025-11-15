@@ -23,7 +23,8 @@ void Connector::Signals_Slots_Connect()
 	connect(eraseBtn, SIGNAL(clicked()), eraseBtn, SLOT(slot_set_penColor()));
 	connect(eraseBtn, SIGNAL(signal_set_penColor()), this, SLOT(slot_set_penColor()));
 	connect(sizeSlider, SIGNAL(sliderReleased()), this, SLOT(slot_set_penSize()));
-	connect(imageAddBtn, SIGNAL(clicked()), this, SLOT(slot_add_image()));
+	connect(imageAddBtn, SIGNAL(clicked()), canvas, SLOT(slot_add_image()));
+	connect(textAddBtn, SIGNAL(clicked()), canvas, SLOT(slot_add_text()));
 	connect(textAddBtn, SIGNAL(clicked()), this, SLOT(slot_add_text()));
 }
 

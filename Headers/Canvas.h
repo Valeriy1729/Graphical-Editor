@@ -10,6 +10,8 @@
 #include <QPainter>
 #include <QGridLayout>
 #include <QPainterPath>
+#include <QInputDialog>
+#include <QLineEdit>
 #include <vector>
 #include "Command/Client.h"
 #include "Command/Invoker.h"
@@ -25,6 +27,11 @@ class Canvas : public QWidget {
 	Client* client;
 	QColor penColor;
 	int penSize;
+	bool imageMode;
+	bool textMode;
+	int width, height;
+	QString name;
+	QString text;
 
 public:
 	Canvas(QWidget* parent=nullptr);
@@ -39,6 +46,10 @@ public:
 	void paintEvent(QPaintEvent* event) override;
 
 	~Canvas();
+
+public slots:
+	void slot_add_image();
+	void slot_add_text();
 };
 
 

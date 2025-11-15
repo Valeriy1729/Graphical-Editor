@@ -36,19 +36,18 @@ public:
 
 class DrawOnCanvasCommand : public Command {
 protected:
-	BrushReciever* brushReciever;
+	DrawOnCanvasReciever* reciever;
 	QWidget* parent;
 	QMouseEvent* m_event;
 public:
-	DrawOnCanvasCommand(BrushReciever* _brushReciever, QWidget* _parent, QMouseEvent* _m_event);
+	DrawOnCanvasCommand(DrawOnCanvasReciever* _drawOnCanvasReciever, QWidget* _parent, QMouseEvent* _m_event);
 	virtual ~DrawOnCanvasCommand();
 };
 
 
 class DrawWidgetCommand : public DrawOnCanvasCommand {
 public:
-	DrawWidgetCommand(BrushReciever* _brushReciever, QWidget* _parent, QMouseEvent* _m_event);
-	virtual void execute() override;
+	DrawWidgetCommand(DrawWidgetReciever* _drawWidgetReciever, QWidget* _parent, QMouseEvent* _m_event);
 	virtual void undo() override;
 	virtual void redo() override;
 	virtual ~DrawWidgetCommand();
@@ -56,11 +55,22 @@ public:
 
 
 class ImageCommand : public DrawWidgetCommand {
-	int width, heigth;
-	int x_cor, y_cor;
+	int width, height;
+	QString name;
 public:
-	ImageCommand(BrushReciever* _brushReciever, QWidget* _parent, QMouseEvent* _event);
+	ImageCommand(DrawWidgetReciever* _drawWidgetReciever, QWidget* _parent, QMouseEvent* _event,
+			int _width, int _height, QString _name);
+	virtual void execute() override;
 	virtual ~ImageCommand();
+};
+
+
+class TextCommand : public DrawWidgetCommand {
+	QString text;
+public:
+	TextCommand(DrawWidgetReciever* _drawWidgetReciever, QWidget* _parent, QMouseEvent* _event, QString _text);
+	virtual void execute() override;
+	virtual ~TextCommand();
 };
 
 

@@ -28,24 +28,27 @@ void ComplexCommand::redo()
 }
 
 
-DrawOnCanvasCommand::DrawOnCanvasCommand(BrushReciever* _brushReciever, QWidget* _parent, QMouseEvent* _m_event) :
-	brushReciever(_brushReciever), parent(_parent), m_event(_m_event)
+DrawOnCanvasCommand::DrawOnCanvasCommand(DrawOnCanvasReciever* _drawOnCavasReciever,
+	QWidget* _parent, QMouseEvent* _m_event) :
+	reciever(_drawOnCavasReciever), parent(_parent), m_event(_m_event)
 { }
 DrawOnCanvasCommand::~DrawOnCanvasCommand()
 { }
 
 
-DrawWidgetCommand::DrawWidgetCommand(BrushReciever* _brushReciever, QWidget* _parent, QMouseEvent* _m_event) :
-	DrawOnCanvasCommand(_brushReciever, _parent, _m_event)
+DrawWidgetCommand::DrawWidgetCommand(DrawWidgetReciever* _drawWidgetReciever, QWidget* _parent, QMouseEvent* _m_event) :
+	DrawOnCanvasCommand(_drawWidgetReciever, _parent, _m_event)
 { }
 DrawWidgetCommand::~DrawWidgetCommand()
 { }
-void DrawWidgetCommand::execute()
-{ }
 void DrawWidgetCommand::undo()
-{ }
+{
+	reciever->undo();
+}
 void DrawWidgetCommand::redo()
-{ }
+{
+	reciever->redo();
+}
 
 
 BrushCommand::BrushCommand(BrushReciever* _brushReciever, QWidget* _parent, QMouseEvent* _m_event) :
@@ -60,16 +63,16 @@ BrushCommand::~BrushCommand()
 { }
 void BrushCommand::execute()
 {
-	brushReciever->setFields(parent, m_event, penColor, penSize);
-	brushReciever->execute();
+	reciever->setFields(parent, m_event, penColor, penSize);
+	reciever->execute();
 }
 void BrushCommand::undo()
 {
-	brushReciever->undo();	
+	reciever->undo();	
 }
 void BrushCommand::redo()
 {
-	brushReciever->redo();	
+	reciever->redo();	
 }
 QColor BrushCommand::penColor {Qt::black};
 int BrushCommand::penSize {15};
@@ -111,10 +114,30 @@ UpdateCommand::~UpdateCommand()
 { }
 
 
-ImageCommand::ImageCommand(BrushReciever* _brushReciever, QWidget* _parent, QMouseEvent* _m_event) :
-	DrawWidgetCommand(_brushReciever, _parent, _m_event)
+ImageCommand::ImageCommand(DrawWidgetReciever* _drawWidgetReciever, QWidget* _parent, QMouseEvent* _m_event,
+				int _width, int _height, QString _name) :
+	DrawWidgetCommand(_drawWidgetReciever, _parent, _m_event), width(_width), height(_height), name(_name)
 {
 	Type = CommandType::ADDIMAGE; putInHist = true;
 }
+void ImageCommand::execute()
+{
+	reciever->setFields(parent, m_event, width, height, name);
+	reciever->execute();
+}
 ImageCommand::~ImageCommand()
+{ }
+
+TextCommand::TextCommand(DrawWidgetReciever* _drawWidgetReciever, QWidget* _parent,
+		QMouseEvent* _m_event, QString _text) :
+	DrawWidgetCommand(_drawWidgetReciever, _parent, _m_event), text(_text)
+{
+	Type = CommandType::ADDIMAGE; putInHist = true;
+}
+void TextCommand::execute()
+{
+	reciever->setFields(parent, m_event, text);
+	reciever->execute();
+}
+TextCommand::~TextCommand()
 { }

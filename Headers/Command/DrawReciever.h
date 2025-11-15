@@ -27,19 +27,39 @@ public:
 };
 
 
-class BrushReciever : public Reciever {
+class DrawOnCanvasReciever : public Reciever {
 protected:
-	static deque<PainterPath> pathHist;
-	static QPainterPath path;	
+	static deque<Path*> drawHist;	
 	static int currHistIndex;
-	static QColor penColor;
-	static int penSize;
 	QWidget* parent;
 	QMouseEvent* m_event;
 public:
+	DrawOnCanvasReciever();
+	virtual void setFields(QWidget* parent, QMouseEvent* _m_event,
+				QColor _penColor, int _penSize);
+	virtual void setFields(QWidget* parent, QMouseEvent* _m_event,
+				int _width, int _height, QString _name);
+	virtual void setFields(QWidget* parent, QMouseEvent* _m_event, QString _text);
+	virtual ~DrawOnCanvasReciever();	
+};
+
+
+class DrawWidgetReciever : public DrawOnCanvasReciever {
+public:
+	DrawWidgetReciever();
+	virtual ~DrawWidgetReciever();
+};
+
+
+class BrushReciever : public DrawOnCanvasReciever {
+protected:
+	static QPainterPath path;	
+	static QColor penColor;
+	static int penSize;
+public:
 	BrushReciever();
-	void setFields(QWidget* parent, QMouseEvent* _m_event,
-			QColor _penColor, int _penSize);
+	virtual void setFields(QWidget* parent, QMouseEvent* _m_event,
+			QColor _penColor, int _penSize) override;
 	virtual ~BrushReciever();
 };
 
@@ -84,13 +104,30 @@ public:
 };
 
 
-class ImageReciever : public BrushReciever {
+class ImageReciever : public DrawWidgetReciever {
+	int width, height;
+	QString name;
 public:
 	ImageReciever();
 	virtual void execute() override;
 	virtual void undo() override;	
 	virtual void redo() override;
+	virtual void setFields(QWidget* _parent, QMouseEvent* _m_event,
+				int _width, int _height, QString _name) override;
 	virtual ~ImageReciever();
 };
+
+
+class TextReciever : public DrawWidgetReciever {
+	QString text;
+public:
+	TextReciever();
+	virtual void execute() override;
+	virtual void undo() override;	
+	virtual void redo() override;
+	virtual void setFields(QWidget* _parent, QMouseEvent* _m_event, QString _text) override;
+	virtual ~TextReciever();
+};
+
 
 #endif

@@ -7,6 +7,7 @@ Client::Client()
 	EndDrawR = new EndDrawReciever;	
 	UpdateR = new UpdateReciever;	
 	ImageR = new ImageReciever;
+	TextR = new TextReciever;
 }
 
 BrushCommand* Client::getBrushCommand(CommandType ReqType, QWidget* parent, QMouseEvent* event)
@@ -27,6 +28,16 @@ BrushCommand* Client::getBrushCommand(CommandType ReqType, QWidget* parent, QCol
 	return new UpdateCommand(UpdateR, parent, penColor, penSize);
 }
 
+ImageCommand* Client::getImageCommand(QWidget* parent, int width, int height, QMouseEvent* event, QString name)
+{
+	return new ImageCommand(ImageR, parent, event, width, height, name);
+}
+
+TextCommand* Client::getTextCommand(QWidget* parent, QMouseEvent* event, QString text)
+{
+	return new TextCommand(TextR, parent, event, text);
+}
+
 Client::~Client()
 {
 	delete DrawR;
@@ -34,4 +45,5 @@ Client::~Client()
 	delete EndDrawR;
 	delete UpdateR;
 	delete ImageR;
+	delete TextR;
 }
