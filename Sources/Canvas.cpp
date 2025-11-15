@@ -32,10 +32,11 @@ void Canvas::slot_add_image()
 	bool ok1, ok2, ok3;
 	if(imageMode == true) return;
 	imageMode = true;	
-	name = QInputDialog::getText(this, tr("Image path"), tr("path:"), QLineEdit::Normal, "...", &ok1);
+	name = QFileDialog::getOpenFileName(this, tr("Selet image"), tr(""),
+			"Images (*.png *.jpg *.jpeg *.bmp *.gif)");
 	width = QInputDialog::getText(this, tr("Image width"), tr("value:"), QLineEdit::Normal, "...", &ok2).toInt(&ok2);
 	height = QInputDialog::getText(this, tr("Image height"), tr("value:"), QLineEdit::Normal, "...", &ok3).toInt(&ok3);
-	if(!ok1 || !ok2 || !ok3) imageMode = false;
+	if(name.isEmpty() || !ok2 || !ok3) imageMode = false;
 }
 
 void Canvas::slot_add_text()
